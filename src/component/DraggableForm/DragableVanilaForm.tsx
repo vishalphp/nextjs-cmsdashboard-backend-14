@@ -14,6 +14,7 @@ type fieldProps = {
     id?: string;
     value?: string;
     infoText?: string;
+    group?: number; // Add group type here
 }
 
 type EditProps = {
@@ -37,9 +38,10 @@ const [editPageName, setEditPageName] = useState<string>('');
 const formMethod = editMode === true ? 'PUT' :'POST';
 
 const addFields = () =>{
-    const keyData = {name:'input_type_field_key_'+fieldCount, type: 'text', label: 'Field Key '+fieldCount,id:'key_'+fieldCount, value:'', infoText:"key name for page layout"};
-    const valueData = {name:'input_type_field_value_'+fieldCount, type: 'select', label: 'Field Value '+fieldCount,id:'value_'+fieldCount, value:'', infoText:"field type select for content side layout"};
-    setFieldsData(prev => [...prev, keyData, valueData]);
+    const keyData = {name:'input_type_field_key_'+fieldCount, type: 'text', label: 'Field Key '+fieldCount,id:'key_'+fieldCount, value:'', infoText:"key name for page layout", group: fieldCount};
+    const labelData = {name:'input_type_field_label_'+fieldCount, type: 'text', label: 'Field Label '+fieldCount,id:'label_'+fieldCount, value:'', infoText:"field label for content side layout", group: fieldCount};
+    const valueData = {name:'input_type_field_value_'+fieldCount, type: 'select', label: 'Field Value '+fieldCount,id:'value_'+fieldCount, value:'', infoText:"field type select for content side layout", group: fieldCount};
+    setFieldsData(prev => [...prev, keyData, labelData, valueData]);
     setFieldCount(fieldCount+1);
 }
 
@@ -54,6 +56,7 @@ useEffect(() => {
 const updateFieldsEdit = (editPageData: any) => {
   const newFieldsData: fieldProps[] = [];
   const regexKey = /^input_type_field_key_\d+$/;
+  const regexLabel = /^input_type_field_label_\d+$/;
   const regexField = /^input_type_field_value_\d+$/;
   const countEdit: number[] =[];
 
@@ -68,6 +71,19 @@ const updateFieldsEdit = (editPageData: any) => {
         id: `key_${keySplit[1]}`,
         value: value as string,
         infoText: 'key name for page layout',
+        group: Number(keySplit[1]),
+      });
+    } else if (regexLabel.test(key)) {
+      const keySplit = key.split('input_type_field_label_');
+      countEdit.push(Number(keySplit[1]));
+      newFieldsData.push({
+        name: key,
+        type: 'text',
+        label: `Field Label ${keySplit[1]}`,
+        id: `label_${keySplit[1]}`,
+        value: value as string,
+        infoText: 'label name for page layout',
+        group: Number(keySplit[1]),
       });
     } else if (regexField.test(key)) {
       const keySplit = key.split('input_type_field_value_');
@@ -78,6 +94,7 @@ const updateFieldsEdit = (editPageData: any) => {
         id: `value_${keySplit[1]}`,
         value: value as string,
         infoText: 'field type select for content side layout',
+        group: Number(keySplit[1]),
       });
     }
   });
@@ -107,11 +124,22 @@ const jsonFormDataSubmitWithCallBack = async(e:React.FormEvent<HTMLFormElement>,
 
 }
 
-const handleInputChange = (index: number, value: string) => {
-  const updatedFields = [...fieldsData];
-  updatedFields[index].value = value;
+const handleInputChange = (index?: string, value?: string) => {
+  const updatedFields = fieldsData.map((field) => 
+    field.id === index ? { ...field, value } : field
+  );
   setFieldsData(updatedFields);
 };
+
+ // Grouping logic based on `group` key
+ const groupedFields = fieldsData.reduce<{ [key: number]: fieldProps[] }>((acc, field) => {
+      if (!acc[field.group!]) {
+        acc[field.group!] = [];
+      }
+      acc[field.group!].push(field);
+      return acc;
+    }, {});
+
 
   return (
     <div className='dragable__layout__wrapper__main'>
@@ -120,8 +148,24 @@ const handleInputChange = (index: number, value: string) => {
     <div className={styles.formContainer}>
       <div className={`${styles.section} ${styles.leftSection} container`}>
         
-        {fieldsData.map((flData, index)=> <TextInput infoText={flData.infoText}  key={flData.id} name={flData.name} label={flData.label} type={flData.type} className={`${styles.draggable} draggable`} draggable={true} value={flData.value} onChange={(e) => handleInputChange(index, e.target.value)} /> )}
-       {/* <div className={`${styles.draggable} draggable`} draggable="true">Field 3</div>*/}
+      {Object.entries(groupedFields).map(([groupKey, fields]) => (
+            <div key={groupKey} className={`${styles.draggable} draggable group-container`} draggable="true">
+              {fields.map((flData, index) => (
+                <TextInput
+                  infoText={flData.infoText}
+                  key={flData.id}
+                  name={flData.name}
+                  label={flData.label}
+                  type={flData.type}
+                  draggable={false}
+                  value={flData.value}
+                  onChange={(e) => handleInputChange(flData.id, e.target.value)}
+                />
+              ))}
+            </div>
+          ))}
+
+        {/* <div className={`${styles.draggable} draggable`} draggable="true">Field 3</div>*/}
       </div>
       <form onSubmit={(e)=>jsonFormDataSubmitWithCallBack(e, formMethod)} className={`${dashboardStyle.dragable_container_full_with}`}>
         {message && <p className={`submitmessage ${ messageStatus === '500'? dashboardStyle.hard_error : messageStatus === '400' ? dashboardStyle.soft_error : dashboardStyle.green_success }`}>{message}</p>}
