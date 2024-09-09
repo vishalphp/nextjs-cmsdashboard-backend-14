@@ -24,7 +24,8 @@ export default function Sidebar({classNameAttr}:sidebarProps) {
 
         <aside>
         <h2 className={`h2__subheading__nav__size ${dashboardStyle.nav__link__normal__color} ${dashboardStyle.font__size__18} ${dashboardStyle['p-20']}`}>Content menu</h2>
-            
+        <Link href="/dashboard/contentpagelist" className={`${dashboardStyle.display__flex} ${dashboardStyle.m_b_10} ${dashboardStyle.p_l_20} ${dashboardStyle.lable__white__color}`}>Content Pages</Link>
+        
         </aside>
 
       </div>

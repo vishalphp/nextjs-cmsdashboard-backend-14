@@ -1,11 +1,23 @@
 {
   "pagename": [
-    "home page"
+    "Home Page"
   ],
   "input_type_field_key_1": [
-    "hi_hello_key"
+    "Hero Section Title"
+  ],
+  "input_type_field_label_1": [
+    "Hero Section Title"
   ],
   "input_type_field_value_1": [
+    "text"
+  ],
+  "input_type_field_key_2": [
+    "Hero Section SubHeading"
+  ],
+  "input_type_field_label_2": [
+    "Hero Section SubHeading"
+  ],
+  "input_type_field_value_2": [
     "text"
   ]
 }
