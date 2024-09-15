@@ -15,9 +15,6 @@ export default function ContentDetials({slug}: slugProps) {
         collectDatabySlug();
     },[slug]);
 
-    useEffect(()=>{
-        console.log(collectFormData);
-    },[collectFormData]);
 
     const collectDatabySlug = async() =>{
         const collectDataBySlugProps = await fetch(`/api/collectJsonDataBySlug/${slug}`);

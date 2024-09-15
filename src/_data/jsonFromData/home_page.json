@@ -3,7 +3,7 @@
     "Home Page"
   ],
   "input_type_field_key_1": [
-    "Hero Section Title"
+    "hero_section_title"
   ],
   "input_type_field_label_1": [
     "Hero Section Title"
@@ -12,7 +12,7 @@
     "text"
   ],
   "input_type_field_key_2": [
-    "Hero Section SubHeading"
+    "hero_section_subheading"
   ],
   "input_type_field_label_2": [
     "Hero Section SubHeading"

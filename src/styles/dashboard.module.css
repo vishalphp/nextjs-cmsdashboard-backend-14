@@ -59,11 +59,22 @@
     border-radius: .375rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
+.formFieldLook {
+    cursor: move;
+    margin: 10px 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
 
 /*width*/
 .width100{
     width: 100%;
+}
+
+/*border*/
+.border__solid__ccc{
+    border: 1px solid #ccc;
 }
 
 /*btn*/
@@ -117,6 +128,9 @@
 .p-20{
     padding: 20px;
 }
+.p-10{
+    padding: 10px;
+}
 .p_l_20{
     padding-left: 20px;
 }
@@ -146,4 +160,7 @@
 }
 .display__flex__direction__column{
     flex-direction: column;
+}
+.align__item__center{
+    align-items: center;
 }
